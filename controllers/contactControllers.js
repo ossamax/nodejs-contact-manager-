@@ -7,14 +7,12 @@ const getAllContacts = asyncHandler(async (req, res) => {
 });
 
 const getContact = asyncHandler(async (req, res) => {
-  const listContacts = await Contact.findOne({
-    id: req.body.id,
-  });
-  if (listContacts) {
-    res.status(200).json(listContacts);
+  const contact = await Contact.findById(req.params.id);
+
+  if (!contact) {
+    res.status(404).json({ message: "Contact not found" });
   } else {
-    res.status(400);
-    throw new Error("Contact not found");
+    res.status(200).json(contact);
   }
 });
 
@@ -35,15 +33,28 @@ const createContact = asyncHandler(async (req, res) => {
 });
 
 const updateContact = asyncHandler(async (req, res) => {
-  res.status(200).json({
-    message: `contacts  updated  ${req.params.id} !`,
-  });
+  const contact = await Contact.findById(req.params.id);
+  if (!contact) {
+    res.status(404).json({ message: "Contact not found" });
+  }
+  const updatedContact = await Contact.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    { new: true }
+  );
+
+  res.status(200).json(updatedContact);
 });
 
 const deleteContact = asyncHandler(async (req, res) => {
-  res.status(200).json({
-    message: `contacts was deleted ${req.params.id}!`,
-  });
+  const contact = await Contact.findByIdAndDelete(req.params.id);
+
+  if (!contact) {
+    res.status(404).json({ message: "Contact not found" });
+    return;
+  }
+
+  res.status(200).json({ message: "Contact deleted successfully" });
 });
 
 module.exports = {

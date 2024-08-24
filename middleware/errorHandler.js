@@ -1,12 +1,12 @@
 const { statusCodes } = require("../constants");
 
 const errorHandler = (err, req, res, next) => {
-  const status = res.statusCode || 500;
-
+  const status = res.statusCode === 200 ? 500 : res.statusCode; // Default to 500 if no status code is set
+  res.status(status);
   switch (status) {
     case statusCodes.NOT_FOUND:
       res.json({
-        title: "Validation failaed !",
+        title: "Not FOUND !",
         message: err.message,
         stackTrace: err.stack,
       });
@@ -32,8 +32,19 @@ const errorHandler = (err, req, res, next) => {
         stackTrace: err.stack,
       });
       break;
+    case statusCodes.VALIDATION_ERROR:
+      res.json({
+        title: "VALIDATION_ERROR !",
+        message: err.message,
+        stackTrace: err.stack,
+      });
+      break;
     default:
-      console.log("No error all good !");
+      res.json({
+        title: "Unknown Error",
+        message: err.message,
+        stackTrace: err.stack,
+      });
       break;
   }
 };

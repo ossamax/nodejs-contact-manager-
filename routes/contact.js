@@ -9,9 +9,17 @@ const {
 
 const router = express.Router();
 
-router.route("/").get(getAllContacts).post(createContact);
-router.route("/:id").get(getContact).put(updateContact).delete(deleteContact);
+// Route to get all contacts or create a new contact
+router
+  .route("/")
+  .get(getAllContacts) // Fetch all contacts
+  .post(createContact); // Create a new contact
 
-
+// Route to get, update, or delete a specific contact by ID
+router
+  .route("/:id")
+  .get(getContact) // Fetch a contact by ID
+  .put(updateContact) // Update a contact by ID
+  .delete(deleteContact); // Delete a contact by ID
 
 module.exports = router;

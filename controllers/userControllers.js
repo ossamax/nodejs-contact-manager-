@@ -29,7 +29,7 @@ const registerUser = asyncHandler(async (req, res) => {
     token: jwt.sign(
       { id: user._id, email: user.email }, // Payload
       process.env.JWT_SECRET, // Secret key
-      { expiresIn: "1h" } // Token expiration (1 hour)
+      { expiresIn: "12h" } // Token expiration (1 hour)
     ),
   });
 });
@@ -64,31 +64,8 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 });
 
-const currentUser = asyncHandler(async (req, res, next) => {
-  let token;
-
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
-    token = req.headers.authorization.split(" ")[1];
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      user = await UserModel.findById(decoded.id).select("-password");
-      if (!user) {
-        res.status(401);
-        throw new Error("User not found");
-      }
-      res.status(200).json(user);
-    } catch (error) {
-      throw new Error("opps , Invalid token !");
-    }
-  }
-
-  if (!token) {
-    res.status(401);
-    throw new Error("Unautorized !");
-  }
+const currentUser = asyncHandler(async (req, res) => {
+  res.json(req.user);
 });
 
 module.exports = { registerUser, loginUser, currentUser };

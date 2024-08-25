@@ -14,6 +14,6 @@ A simple Node.js application for user authentication and contact management.
    ```bash
    git clone https://github.com/ossamax/nodejs-contact-manager-.git
 
-PORT=your_port
-MONGO_URI=your_mongodb_uri
-JWT_SECRET=your_secret_key
+- PORT=your_port
+- MONGO_URI=your_mongodb_uri
+- JWT_SECRET=your_secret_key
